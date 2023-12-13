@@ -13,7 +13,7 @@ const getState = async () => {
 
   // console.log(resultCount);
 
-  return resultCount[0].count % 2;
+  return resultCount[0] ? resultCount[0].count % 2 : 0;
 };
 
 const getMethodHandler = async (
