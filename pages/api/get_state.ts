@@ -15,9 +15,6 @@ const getState = async () => {
 };
 
 const getMethodHandler = async (req: NextApiRequest, res: NextApiResponse<ReturnMessage>) => {
-  if (!req.body.type || !req.body.answer)
-    res.status(400).json({ code: 400, message: 'Malformed request syntax' });
-
   await connectDB();
 
   // Get current answer count and convert it to state
