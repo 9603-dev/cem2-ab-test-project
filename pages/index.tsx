@@ -1,8 +1,9 @@
 import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import { useState } from 'react';
+import { Kanit } from 'next/font/google'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const inter = Inter({ subsets: ['latin'] })
+const kanit = Kanit({ subsets: ["thai"], weight: ["400", "500", "600", "700"]})
 
 export default function Home() {
 
@@ -13,7 +14,32 @@ export default function Home() {
   const [dontBuyRedNum,setDontBuyRedNum] = useState(0);
   const [buyBlackNum,setBuyBlackNum] = useState(0);
   const [dontBuyBlackNum,setDontBuyBlackNum] = useState(0);
-  const buyBtnHandler = () => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.get('/api/get_state')
+      if (result.status === 200) {
+        setState(parseInt(result.data.message))
+        setPic(parseInt(result.data.message)? '/red.png' : '/black.png')
+        setColor(parseInt(result.data.message)? 'แดง' : 'ดำ')
+      }
+    }
+    fetchData()
+  }, [])
+
+  const buyBtnHandler = async() => {
+    await axios.post('/api/submit', {
+        type: state==1? 'red' : 'black',
+        answer: 'yes'
+      })
+      .then(response => {
+        if (response.status === 200) {
+          if (response.data.message == 'Success') {
+            return true
+          }
+        }
+        return false
+      });
     if(state){
       setBuyRedNum(buyRedNum+1)
     }
@@ -25,7 +51,19 @@ export default function Home() {
     setPic(!state? '/red.png' : '/black.png')
     
   }
-  const dontBuyBtnHandler = () => {
+  const dontBuyBtnHandler = async() => {
+    await axios.post('/api/submit', {
+        type: state==1? 'red' : 'black',
+        answer: 'no'
+      })
+      .then(response => {
+        if (response.status === 200) {
+          if (response.data.message == 'Success') {
+            return true
+          }
+        }
+        return false
+      });
     if(state){
       setDontBuyRedNum(dontBuyRedNum+1)
     }
@@ -38,9 +76,9 @@ export default function Home() {
   }
 
   return (
-    <div className={`bg-white w-screen h-screen flex items-center justify-center ${inter.className}`}>
+    <div className={`bg-white w-screen h-screen flex items-center justify-center ${kanit.className}`}>
       <div className='flex flex-col items-center justify-center text-center w-80'>
-        <p className="text-zinc-800">คุณจะซื้อเมล็ดทานตะวันแพคเกจสี{color}หรือไม่</p>
+        <div className="text-zinc-800">คุณจะซื้อเมล็ดทานตะวันแพคเกจสี<span className={state?"text-red-600 font-bold":"font-bold"}> {color} </span>หรือไม่</div>
         <Image className="my-4 rounded-xl"
           src={pic}
           alt={''}
@@ -48,8 +86,8 @@ export default function Home() {
           height={37}></Image>
         <button className="btn btn-primary w-full my-2" onClick={buyBtnHandler}>ซื้อ</button>
         <button className="btn btn-primary w-full my-2" onClick={dontBuyBtnHandler}>ไม่ซื้อ</button>
-        <p>buy red {buyRedNum}, dont buy red {dontBuyRedNum}</p>
-        <p>buy black {buyBlackNum}, dont buy black {dontBuyBlackNum} </p>
+        {/* <p>buy red {buyRedNum}, dont buy red {dontBuyRedNum}</p>
+        <p>buy black {buyBlackNum}, dont buy black {dontBuyBlackNum} </p> */}
         {/* {state},{color},{pic} */}
       </div>
     </div>
