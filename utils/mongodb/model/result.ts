@@ -20,6 +20,7 @@ const resultSchema = new mongoose.Schema(
   },
   {
     collection: 'result',
+    timestamps: { createdAt: false, updatedAt: false },
   }
 );
 
