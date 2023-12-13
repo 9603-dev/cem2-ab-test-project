@@ -8,7 +8,7 @@ const Thankyou = () => {
       <div
         className={`bg-white w-screen h-screen flex items-center justify-center ${kanit.className}`}
       >
-        <div className="text-4xl">ขอบคุณสำหรับคำตอบของคุณ</div>
+        <div className="text-3xl md:text-4xl">ขอบคุณสำหรับคำตอบของคุณ</div>
       </div>
     </>
   );
