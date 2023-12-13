@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Kanit } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -13,6 +14,8 @@ export default function Home() {
   const [dontBuyRedNum, setDontBuyRedNum] = useState(0);
   const [buyBlackNum, setBuyBlackNum] = useState(0);
   const [dontBuyBlackNum, setDontBuyBlackNum] = useState(0);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +38,7 @@ export default function Home() {
       .then((response) => {
         if (response.status === 200) {
           if (response.data.message == 'Success') {
+            router.push('/thankyou');
             return true;
           }
         }
@@ -58,6 +62,7 @@ export default function Home() {
       .then((response) => {
         if (response.status === 200) {
           if (response.data.message == 'Success') {
+            router.push('/thankyou');
             return true;
           }
         }
